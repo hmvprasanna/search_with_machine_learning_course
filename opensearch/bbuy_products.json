@@ -1,5 +1,254 @@
 {
-  "settings": {
-    "index.refresh_interval": "5s"
+  "settings":{
+      "analysis":{
+          "analyzer":{
+              "default":{
+                  "type":"english"
+              }
+          }
+      }
+  },
+"mappings": {
+  "properties": {
+    "accessories" : {
+      "type" : "text"
+    },
+    "active" : {
+      "type" : "boolean"
+    },
+    "bestBuyItemId" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "bestSellingRank" : {
+      "type" : "integer"
+    },
+    "categoryLeaf" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "categoryPath" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "categoryPathCount" : {
+      "type" : "integer"
+    },
+    "categoryPathIds" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "class" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "classId" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "color" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        }
+      }
+    },
+    "condition" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "customerReviewAverage" : {
+      "type" : "float"
+    },
+    "customerReviewCount" : {
+      "type" : "integer"
+    },
+    "department" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "departmentId" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "depth" : {
+      "type" : "text"
+    },
+    "digital" : {
+      "type" : "boolean"
+    },
+    "features" : {
+      "type" : "text"
+    },
+    "frequentlyPurchasedWith" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "height" : {
+      "type" : "text"
+    },
+    "homeDelivery" : {
+      "type" : "boolean"
+    },
+    "image" : {
+      "type" : "keyword",
+      "ignore_above" : 2048
+    },
+    "inStoreAvailability" : {
+      "type" : "boolean"
+    },
+    "inStorePickup" : {
+      "type" : "boolean"
+    },
+    "longDescription" : {
+      "type" : "text"
+    },
+    "longDescriptionHtml" : {
+      "type" : "text"
+    },
+    "manufacturer" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "modelNumber" : {
+      "type" : "text"
+    },
+    "name" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        },
+        "suggest" : {
+          "type" : "completion"
+        }
+      }
+    },
+    "onSale" : {
+      "type" : "boolean"
+    },
+    "onlineAvailability" : {
+      "type" : "boolean"
+    },
+    "productId" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "quantityLimit" : {
+      "type" : "integer"
+    },
+    "regularPrice" : {
+      "type" : "float"
+    },
+    "relatedProducts" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+        "releaseDate" : {
+      "type" : "date",
+      "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+    },
+    "salePrice" : {
+      "type" : "float"
+    },
+    "salesRankLongTerm" : {
+      "type" : "integer"
+    },
+    "salesRankMediumTerm" : {
+      "type" : "integer"
+    },
+    "salesRankShortTerm" : {
+      "type" : "integer"
+    },
+    "shippingCost" : {
+      "type" : "float"
+    },
+    "shippingWeight" : {
+      "type" : "float"
+    },
+    "shortDescription" : {
+      "type" : "text"
+    },
+    "shortDescriptionHtml" : {
+      "type" : "text"
+    },
+    "sku" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        }
+      }
+    },
+        "startDate" : {
+      "type" : "date",
+      "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+    },
+    "subclass" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "subclassId" : {
+      "type" : "keyword",
+      "ignore_above" : 256
+    },
+    "tags" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "type" : {
+      "type" : "text",
+      "fields" : {
+        "keyword" : {
+          "type" : "keyword",
+          "ignore_above" : 2048
+        }
+      }
+    },
+    "url" : {
+      "type" : "keyword",
+      "ignore_above" : 2048
+    },
+    "weight" : {
+      "type" : "text"
+    },
+    "width" : {
+      "type" : "text"
+    }
   }
+}
 }
