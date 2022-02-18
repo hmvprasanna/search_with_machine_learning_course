@@ -1,5 +1,50 @@
 {
-  "settings": {
-    "index.refresh_interval": "5s"
-  }
+  "settings":{
+      "analysis":{
+          "analyzer":{
+              "default":{
+                  "type":"english"
+              }
+          }
+      }
+  },
+  "mappings": {
+      "properties" : {
+        "category" : {
+			"type" : "keyword",
+			"ignore_above" : 256
+        },
+        "click_time" : {
+			"type" : "date",
+			"format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+        },
+        "query" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 2048
+            }
+          }
+        },
+        "query_time" : {
+			"type" : "date",
+			"format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+        },
+        "sku" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "user" : {
+			"type" : "keyword",
+			"ignore_above" : 256
+        }
+      }
+    }
 }
+  
