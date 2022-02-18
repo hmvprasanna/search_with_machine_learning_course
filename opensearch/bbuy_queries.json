@@ -16,7 +16,7 @@
         },
         "click_time" : {
 			"type" : "date",
-			"format" : "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+			"format" : "yyyy-MM-dd HH:mm:ss.S||yyyy-MM-dd HH:mm:ss.SS||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
         },
         "query" : {
           "type" : "text",
@@ -29,7 +29,7 @@
         },
         "query_time" : {
 			"type" : "date",
-			"format" : "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+			"format" : "yyyy-MM-dd HH:mm:ss.S||yyyy-MM-dd HH:mm:ss.SS||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
         },
         "sku" : {
           "type" : "text",
