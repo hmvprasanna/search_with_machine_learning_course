@@ -1,6 +1,7 @@
 {
   "settings":{
-      "analysis":{
+    "index.refresh_interval": "5s",
+    "analysis":{
           "analyzer":{
               "default":{
                   "type":"english"
@@ -169,7 +170,7 @@
     },
         "releaseDate" : {
       "type" : "date",
-      "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+      "format" : "yyyy-MM-dd HH:mm:ss.S||yyyy-MM-dd HH:mm:ss.SS||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
     },
     "salePrice" : {
       "type" : "float"
@@ -206,7 +207,7 @@
     },
         "startDate" : {
       "type" : "date",
-      "format" : "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
+      "format" : "yyyy-MM-dd HH:mm:ss.S||yyyy-MM-dd HH:mm:ss.SS||yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||date_time||date_time_no_millis||epoch_millis||date_optional_time||strict_date_optional_time_nanos||basic_date||basic_date||basic_date_time_no_millis"
     },
     "subclass" : {
       "type" : "text",
