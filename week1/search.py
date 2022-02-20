@@ -29,9 +29,45 @@ def process_filters(filters_input):
         #TODO: IMPLEMENT AND SET filters, display_filters and applied_filters.
         # filters get used in create_query below.  display_filters gets used by display_filters.jinja2 and applied_filters gets used by aggregations.jinja2 (and any other links that would execute a search.)
         if type == "range":
-            pass
+            range_from = request.args.get(filter + ".from", 0)
+            range_to = request.args.get(filter + ".to", None)
+			
+            display_to = "..."
+
+            if range_to:
+                display_to = range_to
+                filters.append({
+                    "range": {
+                        filter: {
+                            "gte": range_from,
+                            "lt": range_to
+                        }
+                    }
+                })
+            else:
+                filters.append({
+                    "range": {
+                        filter: {
+                            "gte": range_from
+                        }
+                    }
+                })
+            
+            display_filters.append("Filtering on {} from {} to {}".format(display_name, range_from, display_to))
+            applied_filters += "&{}.from={}&{}.to={}".format(filter, range_from, filter, range_to)
+
         elif type == "terms":
-            pass #TODO: IMPLEMENT
+            filter_key = request.args.get(filter + ".key", None)
+			
+            filters.append({
+                "term": {
+                    filter: filter_key
+                }
+            })
+			
+            display_filters.append("Filtering on {} , value {}".format(display_name, filter_key))
+            applied_filters += "&{}.key={}".format(filter, filter_key)
+
     print("Filters: {}".format(filters))
 
     return filters, display_filters, applied_filters
@@ -74,7 +110,7 @@ def query():
         query_obj = create_query("*", [], sort, sortDir)
 
     print("query obj: {}".format(query_obj))
-    response = None   # TODO: Replace me with an appropriate call to OpenSearch
+    response = opensearch.search(index="bbuy_products", body=query_obj)
     # Postprocess results here if you so desire
 
     #print(response)
@@ -89,12 +125,116 @@ def query():
 def create_query(user_query, filters, sort="_score", sortDir="desc"):
     print("Query: {} Filters: {} Sort: {}".format(user_query, filters, sort))
     query_obj = {
-        'size': 10,
-        "query": {
-            "match_all": {} # Replace me with a query that both searches and filters
-        },
-        "aggs": {
-            #TODO: FILL ME IN
+  "size": 10,
+  "track_total_hits": True,
+  "query": {
+    "function_score": {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "query_string": {
+                "query": user_query,
+                "fields": [
+                  "name^10",
+                  "shortDescription^2",
+                  "longDescription",
+                  "department",
+                  "categoryPath"
+                ]
+              }
+            }
+          ],
+          "filter": filters
         }
+      },
+      "boost_mode": "multiply",
+      "score_mode": "avg",
+      "functions": [
+        {
+          "field_value_factor": {
+            "field": "salesRankLongTerm",
+            "missing": 100000000,
+            "modifier": "reciprocal"
+          }
+        },
+        {
+          "field_value_factor": {
+            "field": "salesRankMediumTerm",
+            "missing": 100000000,
+            "modifier": "reciprocal"
+          }
+        },
+        {
+          "field_value_factor": {
+            "field": "salesRankShortTerm",
+            "missing": 100000000,
+            "modifier": "reciprocal"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "regularPrice": {
+      "range": {
+        "field": "regularPrice",
+        "ranges": [
+          {
+            "key": "$",
+            "to": "100"
+          },
+          {
+            "key": "$$",
+            "from": "100",
+            "to": "200"
+          },
+          {
+            "key": "$$$",
+            "from": "200",
+            "to": "300"
+          },
+          {
+            "key": "$$$$",
+            "from": "300",
+            "to": "400"
+          },
+          {
+            "key": "$$$$$",
+            "from": "400",
+            "to": "500"
+          },
+          {
+            "key": "$$$$$$",
+            "from": "500"
+          }
+        ]
+      }
+    },
+    "department": {
+      "terms": {
+        "field": "department.keyword"
+      }
+    },
+    "missing_images": {
+        "missing": {
+            "field": "image"
+        }
+    }
+  },
+  "sort": {
+    sort: sortDir
+  },
+  "_source": [
+    "productId",
+    "name",
+    "shortDescription",
+    "longDescription",
+    "department",
+    "salesRankShortTerm",
+    "salesRankMediumTerm",
+    "salesRankLongTerm",
+    "regularPrice"
+  ]
     }
     return query_obj
