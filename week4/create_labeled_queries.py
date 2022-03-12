@@ -4,10 +4,12 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import numpy as np
 import csv
+import string
 
 # Useful if you want to perform stemming.
 import nltk
 stemmer = nltk.stem.PorterStemmer()
+from nltk.stem.snowball import SnowballStemmer
 
 categories_file_name = r'/workspace/datasets/product_data/categories/categories_0001_abcat0010000_to_pcmcat99300050000.xml'
 
@@ -24,6 +26,19 @@ output_file_name = args.output
 
 if args.min_queries:
     min_queries = int(args.min_queries)
+
+# Helper functions
+def transform_query(query):
+    
+    stemmer = SnowballStemmer('english')
+    
+    query_lower = query.lower()
+    punct_trans = query_lower.maketrans(string.punctuation, ' '*len(string.punctuation))
+    query_wspace = query_lower.translate(punct_trans)
+    query_stemmed = " ".join([stemmer.stem(word) for word in query_wspace.split()])
+    
+    return query_stemmed
+
 
 # The root category, named Best Buy with id cat00000, doesn't have a parent.
 root_category_id = 'cat00000'
@@ -42,15 +57,33 @@ for child in root:
     if leaf_id != root_category_id:
         categories.append(leaf_id)
         parents.append(cat_path_ids[-2])
-parents_df = pd.DataFrame(list(zip(categories, parents)), columns =['category', 'parent'])
 
+parents_df = pd.DataFrame(list(zip(categories, parents)), columns =['category', 'parent'])
+#print(parents_df)
 # Read the training data into pandas, only keeping queries with non-root categories in our category tree.
 df = pd.read_csv(queries_file_name)[['category', 'query']]
 df = df[df['category'].isin(categories)]
 
 # IMPLEMENT ME: Convert queries to lowercase, and optionally implement other normalization, like stemming.
-
+df['query'] = df['query'].transform(transform_query)
+#print(df)
+#print(df['category'].nunique())
 # IMPLEMENT ME: Roll up categories to ancestors to satisfy the minimum number of queries per category.
+categorycount_df = df.groupby(['category']).size().reset_index(name='count')
+categorycount_df = categorycount_df[categorycount_df['count'] < min_queries]
+#print(categorycount_df)
+
+while len(categorycount_df):
+    categorycount_df = categorycount_df.merge(parents_df, on = 'category', how = 'left')
+    #print(categorycount_df)
+    category_list = categorycount_df['category'].tolist()
+    parent_list = categorycount_df['parent'].tolist()
+    df['category'] = df['category'].replace(category_list, parent_list)
+    #print(df['category'].nunique())
+    categorycount_df = df.groupby(['category']).size().reset_index(name='count')
+    categorycount_df = categorycount_df[categorycount_df['count'] < min_queries]
+    #print(len(categorycount_df))
+    #print(categorycount_df)
 
 # Create labels in fastText format.
 df['label'] = '__label__' + df['category']
